@@ -3,170 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohammed Fouad | Computational Scientist</title>
-    <link rel="stylesheet" href="profile.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Mohammed Fouad - Computational Chemist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .profile-photo {
-            background-image: url('https://placehold.co/150x150/003366/FFFFFF.png?text=MF');
-            background-size: cover;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark grey-blue for a professional look */
+            color: #e2e8f0; /* Off-white for text */
+            scroll-behavior: smooth;
+        }
+
+        .header-bg {
+            background-image: linear-gradient(135deg, #2c5282, #3182ce);
+        }
+
+        .card {
+            background-color: #2d3748;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 60%;
+            height: 3px;
+            background-color: #4299e1;
+            border-radius: 9999px;
+        }
+
+        .molecule-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background-color: #1a202c;
+            border-radius: 0.75rem;
+        }
+        
+        .mol-line {
+            stroke: #4299e1;
+            stroke-width: 2;
+            transition: stroke-dashoffset 0.5s ease-in-out;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+        
+        .mol-atom {
+            fill: #a0aec0;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transform: translateY(20px);
+        }
+
+        .fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-text {
+            animation: fadeIn 1s ease-out forwards;
         }
     </style>
 </head>
-<body>
+<body class="antialiased">
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="header-bg text-white py-12 px-6 sm:px-12 rounded-b-[2rem] shadow-xl">
+            <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between">
+                <div class="text-center sm:text-left mb-6 sm:mb-0 hero-text">
+                    <h1 class="text-4xl sm:text-5xl font-extrabold mb-2">Mohammed Fouad</h1>
+                    <p class="text-xl sm:text-2xl font-light">Computational Chemist</p>
+                </div>
+                <nav>
+                    <ul class="flex space-x-4 sm:space-x-6 text-sm sm:text-base font-semibold">
+                        <li><a href="#about" class="nav-link hover:text-gray-300 transition duration-300">About</a></li>
+                        <li><a href="#skills" class="nav-link hover:text-gray-300 transition duration-300">Skills</a></li>
+                        <li><a href="#projects" class="nav-link hover:text-gray-300 transition duration-300">Projects</a></li>
+                        <li><a href="https://www.linkedin.com/in/mohammed-fouad" target="_blank" class="hover:text-gray-300 transition duration-300">LinkedIn</a></li>
+                        <li><a href="https://github.com/Mohammed-Fouad" target="_blank" class="hover:text-gray-300 transition duration-300">GitHub</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
 
-    <nav class="navbar">
-        <div class="container">
-            <a href="#about" class="logo">M. Fouad</a>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#education">Education</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#publications">Publications</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+        <!-- Main Content -->
+        <main class="flex-grow p-6 sm:p-12">
+            <div class="max-w-4xl mx-auto space-y-16">
 
-    <header id="about" class="hero">
-        <div class="container">
-            <div class="profile-photo"></div>
-            <h1>Mohammed Fouad Mohammed</h1>
-            <p class="subtitle">Post-graduate scientist with research foundations in QSAR, cheminformatics, and molecular modelling for drug discovery.</p>
-            <a href="#experience" class="cta-button">Explore My Work</a>
-        </div>
-    </header>
+                <!-- About Me Section -->
+                <section id="about" class="card p-8 sm:p-10 fade-in">
+                    <h2 class="section-title text-3xl font-bold mb-6">About Me</h2>
+                    <p class="text-lg leading-relaxed">
+                        I am a post-graduate scientist with a strong foundation in QSAR, cheminformatics, and molecular modeling for drug discovery. My skills include machine learning with Python, RDKit workflows, and experimental antimicrobial evaluation. I am passionate about developing computational tools to accelerate the drug design process and solve complex scientific challenges.
+                    </p>
+                </section>
 
-    <section id="about-content" class="section bg-light">
-        <div class="container">
-            <h2>About Me</h2>
-            <p>Post-graduate scientist with research experience in QSAR, cheminformatics, molecular modelling for drug discovery. Skilled in machine learning with python, RDKit workflows, and experimental antimicrobial evaluation. Aiming to develop computational tools to accelerate drug design.</p>
-        </div>
-    </section>
-
-    <section id="education" class="section">
-        <div class="container">
-            <h2>Education</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <h3>Bachelor of Science | Chemistry</h3>
-                        <p class="timeline-date">2020 - 2024</p>
-                        <p class="timeline-institution">Al-Azhar University, Cairo, Egypt</p>
-                        <ul>
-                            <li>Graduation Project: Cellulose-Based Electrode for Supercapacitors: Harnessing Rice Straw for Sustainable Energy Storage (Grade: V. Good)</li>
-                            <li>GPA: (2.7/4)</li>
-                            <li>Relevant Courses: Linear Algebra: (A+), Computer Science: (A)</li>
-                        </ul>
+                <!-- Skills Section -->
+                <section id="skills" class="card p-8 sm:p-10 fade-in">
+                    <h2 class="section-title text-3xl font-bold mb-6">Skills</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-gray-700 p-6 rounded-xl fade-in">
+                            <h3 class="font-semibold text-xl mb-2">Computational Skills</h3>
+                            <ul class="list-disc list-inside space-y-1 text-gray-300">
+                                <li>Machine Learning & Data Analytics (Python, Matplotlib, Seaborn, Scikit-learn)</li>
+                                <li>Cheminformatics (RDKit workflows)</li>
+                                <li>Molecular Modeling (QSAR, Molecular Docking, MD Simulation)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-700 p-6 rounded-xl fade-in" style="transition-delay: 0.1s;">
+                            <h3 class="font-semibold text-xl mb-2">Laboratory & Research</h3>
+                            <ul class="list-disc list-inside space-y-1 text-gray-300">
+                                <li>Organic Synthesis</li>
+                                <li>Titrimetric & Spectrophotometric Analysis</li>
+                                <li>Chromatography & Biological Evaluation</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-700 p-6 rounded-xl fade-in" style="transition-delay: 0.2s;">
+                            <h3 class="font-semibold text-xl mb-2">Core Foundations</h3>
+                            <ul class="list-disc list-inside space-y-1 text-gray-300">
+                                <li>Quantum, Organic, Physical & Inorganic Chemistry</li>
+                                <li>Linear Algebra, Calculus & Statistics</li>
+                                <li>Python, SQL</li>
+                            </ul>
+                        </div>
                     </div>
+                </section>
+
+                <!-- Projects Section -->
+                <section id="projects" class="card p-8 sm:p-10 fade-in">
+                    <h2 class="section-title text-3xl font-bold mb-6">Projects</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-gray-700 p-6 rounded-xl fade-in">
+                            <h3 class="text-2xl font-bold mb-2 text-blue-400">QSAR for Drug Discovery</h3>
+                            <p class="text-gray-300 mb-4">
+                                Utilized computational methods, including RDKit and machine learning, to build QSAR models for predicting drug activity. This project involved data analysis, feature engineering, and model validation to accelerate the drug design process.
+                            </p>
+                        </div>
+                        <div class="bg-gray-700 p-6 rounded-xl fade-in" style="transition-delay: 0.1s;">
+                            <h3 class="text-2xl font-bold mb-2 text-blue-400">Antimicrobial Evaluation</h3>
+                            <p class="text-gray-300 mb-4">
+                                Conducted experimental evaluation of antimicrobial compounds. This involved designing experiments, interpreting results, and correlating biological activity with structural properties, bridging the gap between computational and wet-lab work.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Molecular Visualization Section -->
+                <section class="card p-8 sm:p-10 text-center fade-in">
+                    <h2 class="section-title text-3xl font-bold mb-6">Interactive Molecule</h2>
+                    <p class="text-lg leading-relaxed mb-4">
+                        Explore a 2D representation of a simple molecule. Click the button to switch the display!
+                    </p>
+                    <div class="molecule-container mx-auto max-w-lg mb-6 flex items-center justify-center">
+                        <svg id="molecule-svg" width="100%" height="100%" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet"></svg>
+                    </div>
+                    <button id="mol-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+                        Show Molecule
+                    </button>
+                </section>
+
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-gray-400 py-6 text-center rounded-t-[2rem] mt-12">
+            <div class="max-w-4xl mx-auto">
+                <p>&copy; 2024 Mohammed Fouad. All Rights Reserved.</p>
+                <div class="mt-2 text-sm">
+                    <a href="mailto:mohaammed.fouad@gmail.com" class="hover:text-gray-300 transition duration-300">mohaammed.fouad@gmail.com</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </footer>
+    </div>
+    
+    <script>
+        // Molecule drawing logic
+        const svg = document.getElementById('molecule-svg');
+        const button = document.getElementById('mol-button');
+        let isVisible = false;
 
-    <section id="experience" class="section bg-light">
-        <div class="container">
-            <h2>Experience</h2>
-            <div class="experience-grid">
-                <div class="experience-card">
-                    <h3>Research Assistant</h3>
-                    <p class="exp-date">Jun 2025 – Present</p>
-                    <p class="exp-company">Remote</p>
-                    <p class="exp-details">Curated and visualized 700+ pyrazoles and developed machine learning model (R² = 0.86) for COX-2 inhibition prediction using RDkit and Scikit-learn.</p>
-                </div>
-                <div class="experience-card">
-                    <h3>Research Intern</h3>
-                    <p class="exp-date">Sep 2025</p>
-                    <p class="exp-company">Drug Research Center, British University in Egypt (BUE)</p>
-                    <p class="exp-details">Applied molecular docking using MzDock. Learned about the drug discovery process, cell culture, PCR, gel electrophoresis.</p>
-                </div>
-                <div class="experience-card">
-                    <h3>Research Assistant</h3>
-                    <p class="exp-date">Oct 2024 – May 2025</p>
-                    <p class="exp-company">Supervisor: Prof. Ahmed Ragab</p>
-                    <p class="exp-details">Conducted literature analysis of 25+ papers on quinoline derivatives for antimicrobial activity; contributed to a review paper.</p>
-                </div>
-                <div class="experience-card">
-                    <h3>Research Assistant</h3>
-                    <p class="exp-date">Nov 2023 – Jun 2024</p>
-                    <p class="exp-company">Supervisor: Dr. Moustafa Samir at Al-Azhar University</p>
-                    <p class="exp-details">Synthesized of rhodamines, polymers and characterized them using FTIR, NMR, melting point analysis. Evaluated electrochemical and chemosensing properties of these compounds using potentiostate and photoluminescence.</p>
-                </div>
-                <div class="experience-card">
-                    <h3>Internship</h3>
-                    <p class="exp-date">Sep 2023</p>
-                    <p class="exp-company">Egyptian Atomic Energy Authority</p>
-                    <p class="exp-details">Practical training in radioactive water treatment, analytical chemistry, and isotopes production.</p>
-                </div>
-                <div class="experience-card">
-                    <h3>STEM and Robotics Coach</h3>
-                    <p class="exp-date">Oct 2024 – Jun 2025</p>
-                    <p class="exp-company">I Shine Academy Techno Kids Techno Future</p>
-                    <p class="exp-details">Mentored 30+ students in reading research papers, and developing project ideas. Co-led a team that won the 3rd place in First Lego League Challenge Competition.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        const drawMolecule = () => {
+            // Clear existing SVG
+            while (svg.firstChild) {
+                svg.removeChild(svg.firstChild);
+            }
 
-    <section id="skills" class="section">
-        <div class="container">
-            <h2>Technical Skills</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <h3>Programming & Data Analytics</h3>
-                    <p>Python (Intermediate), Google Colab, Pandas, NumPy, Matplotlib, Seaborn, Excel</p>
-                </div>
-                <div class="skill-card">
-                    <h3>Machine Learning</h3>
-                    <p>Scikit-learn (RF, KNN, SVM, XGB)</p>
-                </div>
-                <div class="skill-card">
-                    <h3>Cheminformatics</h3>
-                    <p>RDKit, mols2grid, Gnina, Py3Dmol, SHAP, MzDock</p>
-                </div>
-                <div class="skill-card">
-                    <h3>Wet Lab</h3>
-                    <p>MIC, IC50, cytotoxicity, PCR, FTIR, NMR, melting point analysis, cyclic voltammetry, GCD, EIS, photoluminescence.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+            // Carbon chain (like propane)
+            const atoms = [
+                { x: 100, y: 125, r: 12, label: 'C' },
+                { x: 200, y: 125, r: 12, label: 'C' },
+                { x: 300, y: 125, r: 12, label: 'C' }
+            ];
+            
+            const bonds = [
+                { x1: 100, y1: 125, x2: 200, y2: 125 },
+                { x1: 200, y1: 125, x2: 300, y2: 125 }
+            ];
 
-    <section id="publications" class="section bg-light">
-        <div class="container">
-            <h2>Publications (In Progress)</h2>
-            <div class="publication-list">
-                <div class="publication-item">
-                    <h3>Design and Predict the Potential of Pyrazole-based Anti-Inflammatory agents using Fingerprint Machine Learning</h3>
-                </div>
-                <div class="publication-item">
-                    <h3>Quinoline and Quinolone Derivatives as Antimicrobial Agents: A Comparative Review of Synthesis, Reactivity, and SAR Insights.</h3>
-                </div>
-                <div class="publication-item">
-                    <h3>Rhodamine-based Polymer Composites for Chemosensing Applications</h3>
-                </div>
-            </div>
-        </div>
-    </section>
+            // Add hydrogen atoms
+            atoms.push({ x: 100, y: 85, r: 8, label: 'H' }); bonds.push({ x1: 100, y1: 125, x2: 100, y2: 85 });
+            atoms.push({ x: 100, y: 165, r: 8, label: 'H' }); bonds.push({ x1: 100, y1: 125, x2: 100, y2: 165 });
+            atoms.push({ x: 60, y: 125, r: 8, label: 'H' }); bonds.push({ x1: 100, y1: 125, x2: 60, y2: 125 });
+            
+            atoms.push({ x: 200, y: 85, r: 8, label: 'H' }); bonds.push({ x1: 200, y1: 125, x2: 200, y2: 85 });
+            atoms.push({ x: 200, y: 165, r: 8, label: 'H' }); bonds.push({ x1: 200, y1: 125, x2: 200, y2: 165 });
+            
+            atoms.push({ x: 300, y: 85, r: 8, label: 'H' }); bonds.push({ x1: 300, y1: 125, x2: 300, y2: 85 });
+            atoms.push({ x: 300, y: 165, r: 8, label: 'H' }); bonds.push({ x1: 300, y1: 125, x2: 300, y2: 165 });
+            atoms.push({ x: 340, y: 125, r: 8, label: 'H' }); bonds.push({ x1: 300, y1: 125, x2: 340, y2: 125 });
 
-    <section id="contact" class="section">
-        <div class="container">
-            <h2>Contact</h2>
-            <p><strong>Phone:</strong> (+20) 155 151 7158</p>
-            <p><strong>Email:</strong> mohaammed.fouad@gmail.com</p>
-            <p><strong>LinkedIn:</strong> <a href="#">Mohammed Fouad</a></p>
-            <p><strong>GitHub:</strong> <a href="#">Mohammed Fouad</a></p>
-            <p><strong>Location:</strong> Zagazig, Sharkia, Egypt</p>
-        </div>
-    </section>
+            // Animate bonds
+            bonds.forEach((bond, index) => {
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', bond.x1);
+                line.setAttribute('y1', bond.y1);
+                line.setAttribute('x2', bond.x2);
+                line.setAttribute('y2', bond.y2);
+                line.classList.add('mol-line');
+                svg.appendChild(line);
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 Mohammed Fouad. All rights reserved.</p>
-        </div>
-    </footer>
+                // Animate the drawing of the line
+                const length = Math.sqrt(Math.pow(bond.x2 - bond.x1, 2) + Math.pow(bond.y2 - bond.y1, 2));
+                line.style.strokeDasharray = length;
+                line.style.strokeDashoffset = length;
+                setTimeout(() => {
+                    line.style.strokeDashoffset = 0;
+                }, 100 + index * 100); 
+            });
 
-    <script src="profile.js"></script>
+            // Animate atoms and labels
+            atoms.forEach((atom, index) => {
+                const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', atom.x);
+                circle.setAttribute('cy', atom.y);
+                circle.setAttribute('r', atom.r);
+                circle.classList.add('mol-atom');
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', atom.x);
+                text.setAttribute('y', atom.y);
+                text.setAttribute('dy', '.3em');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('fill', '#1a202c');
+                text.textContent = atom.label;
+                text.classList.add('mol-atom');
+
+                group.appendChild(circle);
+                group.appendChild(text);
+                svg.appendChild(group);
+
+                // Animate the opacity
+                setTimeout(() => {
+                    circle.style.opacity = 1;
+                    text.style.opacity = 1;
+                }, 300 + index * 50);
+            });
+        };
+
+        button.addEventListener('click', () => {
+            isVisible = !isVisible;
+            if (isVisible) {
+                drawMolecule();
+                button.textContent = 'Hide Molecule';
+            } else {
+                while (svg.firstChild) {
+                    svg.removeChild(svg.firstChild);
+                }
+                button.textContent = 'Show Molecule';
+            }
+        });
+
+        // Intersection Observer for scroll-based animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Highlight nav links on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-gray-300');
+                if (link.href.includes(current)) {
+                    link.classList.add('text-gray-300');
+                }
+            });
+        });
+
+    </script>
 </body>
 </html>
