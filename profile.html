@@ -1,52 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mohammed Fouad | Cheminformatician</title>
-  <link rel="stylesheet" href="profile.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohammed Fouad | Computational Scientist</title>
+    <link rel="stylesheet" href="profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .profile-photo {
+            background-image: url('https://placehold.co/150x150/003366/FFFFFF.png?text=MF');
+            background-size: cover;
+        }
+    </style>
 </head>
 <body>
-  <header class="fade-in">
-    <h1>Mohammed Fouad</h1>
-    <p id="typing"></p>
-    <button id="theme-toggle">🌙 Dark Mode</button>
-  </header>
 
-  <nav>
-    <a href="#about">About</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </nav>
+    <nav class="navbar">
+        <div class="container">
+            <a href="#about" class="logo">M. Fouad</a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#publications">Publications</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
 
-  <section id="about" class="card slide-up">
-    <h2>About Me</h2>
-    <p>
-      I am a recent chemistry graduate and cheminformatician passionate about drug discovery,
-      computational chemistry, and machine learning applications in life sciences.
-      I aim to bridge chemistry with data-driven solutions for healthcare.
-    </p>
-  </section>
+    <header id="about" class="hero">
+        <div class="container">
+            <div class="profile-photo"></div>
+            <h1>Mohammed Fouad Mohammed</h1>
+            <p class="subtitle">Post-graduate scientist with research foundations in QSAR, cheminformatics, and molecular modelling for drug discovery.</p>
+            <a href="#experience" class="cta-button">Explore My Work</a>
+        </div>
+    </header>
 
-  <section id="projects" class="card slide-up">
-    <h2>Projects</h2>
-    <ul>
-      <li class="hover-card">📊 Antimicrobial activity prediction models</li>
-      <li class="hover-card">🧬 Cheminformatics pipelines with Python & R</li>
-      <li class="hover-card">🌊 Chitosan extraction and nano-material applications</li>
-    </ul>
-  </section>
+    <section id="about-content" class="section bg-light">
+        <div class="container">
+            <h2>About Me</h2>
+            <p>Post-graduate scientist with research experience in QSAR, cheminformatics, molecular modelling for drug discovery. Skilled in machine learning with python, RDKit workflows, and experimental antimicrobial evaluation. Aiming to develop computational tools to accelerate drug design.</p>
+        </div>
+    </section>
 
-  <section id="contact" class="card slide-up">
-    <h2>Contact</h2>
-    <p>Email: <a href="mailto:youremail@example.com">youremail@example.com</a></p>
-    <p>GitHub: <a href="https://github.com/Mohaammed-Fouad" target="_blank">github.com/Mohaammed-Fouad</a></p>
-  </section>
+    <section id="education" class="section">
+        <div class="container">
+            <h2>Education</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Bachelor of Science | Chemistry</h3>
+                        <p class="timeline-date">2020 - 2024</p>
+                        <p class="timeline-institution">Al-Azhar University, Cairo, Egypt</p>
+                        <ul>
+                            <li>Graduation Project: Cellulose-Based Electrode for Supercapacitors: Harnessing Rice Straw for Sustainable Energy Storage (Grade: V. Good)</li>
+                            <li>GPA: (2.7/4)</li>
+                            <li>Relevant Courses: Linear Algebra: (A+), Computer Science: (A)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <footer class="fade-in">
-    <p>&copy; 2025 Mohammed Fouad. All rights reserved.</p>
-  </footer>
+    <section id="experience" class="section bg-light">
+        <div class="container">
+            <h2>Experience</h2>
+            <div class="experience-grid">
+                <div class="experience-card">
+                    <h3>Research Assistant</h3>
+                    <p class="exp-date">Jun 2025 – Present</p>
+                    <p class="exp-company">Remote</p>
+                    <p class="exp-details">Curated and visualized 700+ pyrazoles and developed machine learning model (R² = 0.86) for COX-2 inhibition prediction using RDkit and Scikit-learn.</p>
+                </div>
+                <div class="experience-card">
+                    <h3>Research Intern</h3>
+                    <p class="exp-date">Sep 2025</p>
+                    <p class="exp-company">Drug Research Center, British University in Egypt (BUE)</p>
+                    <p class="exp-details">Applied molecular docking using MzDock. Learned about the drug discovery process, cell culture, PCR, gel electrophoresis.</p>
+                </div>
+                <div class="experience-card">
+                    <h3>Research Assistant</h3>
+                    <p class="exp-date">Oct 2024 – May 2025</p>
+                    <p class="exp-company">Supervisor: Prof. Ahmed Ragab</p>
+                    <p class="exp-details">Conducted literature analysis of 25+ papers on quinoline derivatives for antimicrobial activity; contributed to a review paper.</p>
+                </div>
+                <div class="experience-card">
+                    <h3>Research Assistant</h3>
+                    <p class="exp-date">Nov 2023 – Jun 2024</p>
+                    <p class="exp-company">Supervisor: Dr. Moustafa Samir at Al-Azhar University</p>
+                    <p class="exp-details">Synthesized of rhodamines, polymers and characterized them using FTIR, NMR, melting point analysis. Evaluated electrochemical and chemosensing properties of these compounds using potentiostate and photoluminescence.</p>
+                </div>
+                <div class="experience-card">
+                    <h3>Internship</h3>
+                    <p class="exp-date">Sep 2023</p>
+                    <p class="exp-company">Egyptian Atomic Energy Authority</p>
+                    <p class="exp-details">Practical training in radioactive water treatment, analytical chemistry, and isotopes production.</p>
+                </div>
+                <div class="experience-card">
+                    <h3>STEM and Robotics Coach</h3>
+                    <p class="exp-date">Oct 2024 – Jun 2025</p>
+                    <p class="exp-company">I Shine Academy Techno Kids Techno Future</p>
+                    <p class="exp-details">Mentored 30+ students in reading research papers, and developing project ideas. Co-led a team that won the 3rd place in First Lego League Challenge Competition.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <script src="profile.js"></script>
+    <section id="skills" class="section">
+        <div class="container">
+            <h2>Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Programming & Data Analytics</h3>
+                    <p>Python (Intermediate), Google Colab, Pandas, NumPy, Matplotlib, Seaborn, Excel</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Machine Learning</h3>
+                    <p>Scikit-learn (RF, KNN, SVM, XGB)</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Cheminformatics</h3>
+                    <p>RDKit, mols2grid, Gnina, Py3Dmol, SHAP, MzDock</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Wet Lab</h3>
+                    <p>MIC, IC50, cytotoxicity, PCR, FTIR, NMR, melting point analysis, cyclic voltammetry, GCD, EIS, photoluminescence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="publications" class="section bg-light">
+        <div class="container">
+            <h2>Publications (In Progress)</h2>
+            <div class="publication-list">
+                <div class="publication-item">
+                    <h3>Design and Predict the Potential of Pyrazole-based Anti-Inflammatory agents using Fingerprint Machine Learning</h3>
+                </div>
+                <div class="publication-item">
+                    <h3>Quinoline and Quinolone Derivatives as Antimicrobial Agents: A Comparative Review of Synthesis, Reactivity, and SAR Insights.</h3>
+                </div>
+                <div class="publication-item">
+                    <h3>Rhodamine-based Polymer Composites for Chemosensing Applications</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <div class="container">
+            <h2>Contact</h2>
+            <p><strong>Phone:</strong> (+20) 155 151 7158</p>
+            <p><strong>Email:</strong> mohaammed.fouad@gmail.com</p>
+            <p><strong>LinkedIn:</strong> <a href="#">Mohammed Fouad</a></p>
+            <p><strong>GitHub:</strong> <a href="#">Mohammed Fouad</a></p>
+            <p><strong>Location:</strong> Zagazig, Sharkia, Egypt</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Mohammed Fouad. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="profile.js"></script>
 </body>
 </html>

@@ -1,23 +1,15 @@
-// Dark mode toggle
-const toggleButton = document.getElementById("theme-toggle");
-toggleButton.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-  if (document.body.classList.contains("dark")) {
-    toggleButton.textContent = "☀️ Light Mode";
-  } else {
-    toggleButton.textContent = "🌙 Dark Mode";
-  }
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+
+        if (targetElement) {
+            window.scrollTo({
+                top: targetElement.offsetTop - document.querySelector('.navbar').offsetHeight,
+                behavior: 'smooth'
+            });
+        }
+    });
 });
-
-// Typing effect for header tagline
-const typingText = "Cheminformatician | Computational Chemistry | Drug Discovery";
-let index = 0;
-
-function type() {
-  if (index < typingText.length) {
-    document.getElementById("typing").textContent += typingText.charAt(index);
-    index++;
-    setTimeout(type, 100);
-  }
-}
-window.onload = type;
