@@ -1,572 +1,1341 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Mohammed Fouad — Computational Chemist. QSAR, cheminformatics, RDKit, ML projects and interactive molecule demos.">
-  <title>Mohammed Fouad — Computational Chemist</title>
-  <!-- Fonts & Tailwind -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    :root{
-      --bg:#0f1724; /* subtle darker */
-      --card:#111827;
-      --muted:#9ca3af;
-      --accent:#60a5fa;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohammed Fouad | Computational Chemist & Cheminformatician</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    html,body{height:100%;}
-    body{
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-      background:var(--bg);
-      color:#e6eef8;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      scroll-behavior:smooth;
-    }
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #121212;
+            --bg-tertiary: #1a1a1a;
+            --molecular-blue: #00d4ff;
+            --protein-green: #00ff88;
+            --phosphor-purple: #b84fff;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-dim: #606060;
+        }
 
-    /* Card / Photo styling kept but reduced custom CSS in favor of Tailwind where possible */
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));}
-    .photo-frame{overflow:hidden;border-radius:1rem;}
-    .section-title{position:relative;display:inline-block}
-    .section-title::after{content:'';position:absolute;left:0;bottom:-6px;width:55%;height:3px;background:var(--accent);border-radius:9999px}
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
 
-    /* SVG Molecule animation helpers */
-    .mol-line{stroke:var(--accent);stroke-width:2;stroke-linecap:round}
-    .mol-atom{fill:#e6eef8}
+        .portfolio {
+            position: relative;
+            min-height: 100vh;
+        }
 
-    /* small accessible focus style */
-    .focus-outline:focus{outline:3px solid rgba(96,165,250,0.18);outline-offset:3px}
+        /* Molecular Background */
+        .molecular-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
 
-    /* Fade-in controlled by intersection observer */
-    .fade-in{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
-    .fade-in.is-visible{opacity:1;transform:none}
+        .molecule {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, var(--molecular-blue) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: float linear infinite;
+        }
 
-    /* Helper for captions under photos */
-    .caption{color:var(--muted);font-size:.95rem;margin-top:.5rem}
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0);
+                opacity: 0.4;
+            }
+            50% {
+                transform: translate(50px, -50px);
+                opacity: 0.8;
+            }
+        }
 
-    /* Carousel helpers */
-    .carousel-container{position:relative;overflow:hidden} /* keep hidden to avoid partial items */
-    .carousel-track{display:flex;transition:transform .45s cubic-bezier(.2,.9,.2,1);gap:1rem}
-    .carousel-track > *{box-sizing:border-box;flex:0 0 auto} /* children are sized by Tailwind classes */
-    .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(4px);color:var(--accent);width:40px;height:40px;border-radius:9999px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:60}
-    .carousel-btn:focus{outline:3px solid rgba(96,165,250,0.18);outline-offset:3px}
-    .carousel-btn.left{left:8px}
-    .carousel-btn.right{right:8px}
-    .carousel-btn[disabled]{opacity:0.35;cursor:not-allowed}
-    .carousel-btn svg{width:18px;height:18px;display:block}
-  </style>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-HMEV8SC5X3"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
 
-  gtag('config', 'G-HMEV8SC5X3');
-</script>
+        .nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .logo-bracket {
+            color: var(--molecular-blue);
+            font-size: 1.8rem;
+        }
+
+        .logo-text {
+            color: var(--protein-green);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: color 0.3s;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-links a::before {
+            content: '>';
+            position: absolute;
+            left: -15px;
+            opacity: 0;
+            color: var(--molecular-blue);
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--molecular-blue);
+        }
+
+        .nav-links a:hover::before,
+        .nav-links a.active::before {
+            opacity: 1;
+            left: -20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .terminal-prompt {
+            color: var(--protein-green);
+            font-family: 'JetBrains Mono', monospace;
+            margin-right: 1rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch-container {
+            position: relative;
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--molecular-blue), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .hero-divider {
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--molecular-blue), var(--protein-green));
+            margin: 1.5rem 0;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .highlight-blue {
+            color: var(--molecular-blue);
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .highlight-green {
+            color: var(--protein-green);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .tech-text {
+            color: var(--phosphor-purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            font-family: 'Space Grotesk', sans-serif;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--molecular-blue), var(--protein-green));
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--molecular-blue);
+        }
+
+        .hero-image-placeholder {
+            position: relative;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-frame {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(184, 79, 255, 0.1));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.3;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .data-stream {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--protein-green);
+            opacity: 0.5;
+        }
+
+        .data-line {
+            animation: dataFlow 2s ease-in-out infinite;
+        }
+
+        @keyframes dataFlow {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+
+        .placeholder-text {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            text-align: center;
+            z-index: 1;
+            font-size: 1.1rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--molecular-blue);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        .chevron-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Section Styles */
+        .section {
+            min-height: 100vh;
+            padding: 6rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .title-number {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--molecular-blue);
+            font-size: 0.7em;
+        }
+
+        /* About Section */
+        .about-text {
+            max-width: 900px;
+        }
+
+        .lead-text {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .lead-text .highlight {
+            color: var(--protein-green);
+            font-weight: 600;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--molecular-blue);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--molecular-blue);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Publications Section */
+        .publications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .publication-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .publication-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .publication-card:hover .card-glow {
+            opacity: 0.2;
+        }
+
+        .card-glow {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+            filter: blur(40px);
+            z-index: -1;
+        }
+
+        .pub-status-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #000;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        .pub-year {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pub-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            color: var(--text-primary);
+        }
+
+        .pub-journal {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pub-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .pub-link {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .pub-link:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        /* Workshops Section */
+        .workshops-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .workshop-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workshop-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--phosphor-purple), transparent);
+            transition: left 0.5s;
+        }
+
+        .workshop-card:hover::before {
+            left: 100%;
+        }
+
+        .workshop-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--phosphor-purple);
+            background: rgba(184, 79, 255, 0.05);
+        }
+
+        .workshop-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .workshop-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .workshop-focus {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .workshop-line {
+            width: 50px;
+            height: 2px;
+            background: var(--phosphor-purple);
+            margin: 1rem auto 0;
+        }
+
+        /* Skills Section */
+        .skills-matrix {
+            display: grid;
+            gap: 3rem;
+        }
+
+        .skill-category {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .skill-category:hover {
+            border-color: rgba(0, 255, 136, 0.3);
+            background: rgba(0, 255, 136, 0.02);
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--protein-green);
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+
+        .skill-tag:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--protein-green);
+            color: var(--protein-green);
+            transform: translateY(-2px);
+        }
+
+        /* Education Section */
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--molecular-blue), var(--protein-green));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -0.55rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            background: var(--protein-green);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .timeline-content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .institution {
+            color: var(--molecular-blue);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .thesis {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-text {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .social-link.linkedin:hover {
+            border-color: #0077b5;
+            box-shadow: 0 0 20px rgba(0, 119, 181, 0.3);
+        }
+
+        .social-link.github:hover {
+            border-color: #ffffff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .social-link.email:hover {
+            border-color: var(--molecular-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .social-link.orcid:hover {
+            border-color: #a6ce39;
+            box-shadow: 0 0 20px rgba(166, 206, 57, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .footer-tech {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            color: var(--text-dim);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-image-placeholder {
+                height: 400px;
+            }
+
+            .hero-divider {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .section {
+                padding: 4rem 1rem;
+            }
+
+            .publications-grid,
+            .workshops-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 2rem;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .social-link {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <a class="sr-only focus:not-sr-only" href="#main">Skip to content</a>
+    <div class="portfolio">
+        <!-- Molecular Background -->
+        <div class="molecular-bg" id="molecularBg"></div>
+        
+        <!-- Navigation -->
+        <nav class="nav" id="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <span class="logo-bracket">&lt;</span>
+                    <span class="logo-text">Mohammed Fouad</span>
+                    <span class="logo-bracket">/&gt;</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#about">About</a>
+                    <a href="#publications">Publications</a>
+                    <a href="#workshops">Workshops</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+        </nav>
 
-  <header class="bg-gradient-to-br from-slate-800 to-slate-900 text-white py-8 px-6 md:px-12 rounded-b-2xl shadow-xl">
-    <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <!-- PROFILE PHOTO (replace the src below with your real image) -->
-        <img id="profile-photo" src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/M%20(1)%20(1).png?raw=true" alt="Mohammed Fouad portrait" loading="lazy" width="96" height="96" class="rounded-xl shadow-lg photo-frame hidden sm:block">
-        <div>
-          <h1 class="text-2xl md:text-4xl font-extrabold">Mohammed Fouad</h1>
-          <p class="text-sm md:text-lg text-slate-300">Computational Chemist — QSAR · Cheminformatics · ML</p>
-        </div>
-      </div>
+        <!-- Hero Section -->
+        <section id="hero" class="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="glitch-container">
+                        <h1 class="hero-title">
+                            <span class="terminal-prompt">></span> Mohammed Fouad <span class="terminal-prompt"><</span>
+                        </h1>
+                        <div class="scan-line"></div>
+                    </div>
+                    <div class="hero-divider"></div>
+                    <h2 class="hero-subtitle">
+                         <span class="highlight-blue">Cheminformatician</span> & <span class="highlight-green">Data Analyst</span>
+                    </h2>
+                    <p class="hero-description">
+                        Graduate Researcher specializing in <span class="tech-text">QSAR</span>, 
+                        <span class="tech-text">Cheminformatics</span>, and 
+                        <span class="tech-text">Machine Learning</span> for Drug Discovery
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#publications" class="btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>
+                                <path d="M8.5 2h7"/><path d="M7 16h10"/>
+                            </svg>
+                            View Research
+                        </a>
+                        <a href="CV_MohammedFouad.pdf" download="My_Professional_CV" class="btn-secondary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+                            </svg>
+                            View CV
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image-placeholder">
+                    <div class="image-frame">
+                        <div class="image-overlay">
+                            <div class="grid-overlay"></div>
+                            <div class="data-stream" id="dataStream"></div>
+                        </div>
+                        <div class="placeholder-text">
+                            <img src="New_Photos\file_000000001d447243a7dde511b24e573f.png" alt="Lab Photo" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;"><br/>
+                            <span style="font-size: 0.8em; opacity: 0.6;">Researcher with molecular models</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </div>
+        </section>
 
-      <nav aria-label="Main navigation" class="hidden md:block">
-        <ul class="flex items-center gap-6 text-sm font-semibold">
-          <li><a class="hover:text-slate-200" href="#about">About</a></li>
-          <li><a class="hover:text-slate-200" href="#skills">Skills</a></li>
-          <li><a class="hover:text-slate-200" href="#projects">Projects</a></li>
-          <li><a class="hover:text-slate-200" href="#gallery">Gallery</a></li>
-          <li><a class="hover:text-slate-200" href="https://www.linkedin.com/in/mohammed-fouad-%F0%9F%87%B5%F0%9F%87%B8-73701a135" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <li><a class="hover:text-slate-200" href="https://github.com/Mohaammed-Fouad" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-        </ul>
-      </nav>
+        <!-- About Section -->
+        <section id="about" class="section about">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="title-number">01.</span> About Me
+                </h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p class="lead-text">
+                            Graduate researcher with applied knowledge in <span class="highlight">molecular modeling</span> and 
+                            <span class="highlight">cheminformatics</span>. 
+                        </p>
+                        <p>
+                            My research interests include developing computational tools to accelerate drug design, 
+                            combining advanced cheminformatics techniques with machine learning to predict 
+                            molecular properties and optimize therapeutic candidates.
+                        </p>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">3+</div>
+                                <div class="stat-label">Research Contributions</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">4+</div>
+                                <div class="stat-label">Workshops Participation</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">10+</div>
+                                <div class="stat-label">Tools Used</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      <!-- Mobile menu toggle -->
-      <div class="md:hidden">
-        <button id="menu-toggle" class="p-2 rounded-md focus-outline" aria-expanded="false" aria-controls="mobile-menu">
-          <span class="sr-only">Open main menu</span>
-          <!-- simple hamburger -->
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-        </button>
-      </div>
+        <!-- Publications Section -->
+        <section id="publications" class="section publications">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="title-number">02.</span> Publications
+                </h2>
+                <div class="publications-grid">
+                    <div class="publication-card" style="--accent-color: #00ff88;">
+                        <div class="pub-status-badge" style="background: #00ff88;">Published</div>
+                        <div class="pub-year">2026</div>
+                        <h3 class="pub-title">Amphiphilic cellulose and alginate-functionalized magnetic ZIF-8 nanocomposites for dinitrophenol removal, colorimetric H₂O₂ sensing, and antibacterial applications</h3>
+                        <p class="pub-journal">International Journal of Biological Macromolecules</p>
+                        <div class="pub-footer">
+                            <a href="https://doi.org/10.1016/j.ijbiomac.2026.150699" class="pub-link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                    <polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/>
+                                </svg>
+                                View Paper
+                            </a>
+                        </div>
+                        <div class="card-glow" style="background: #00ff88;"></div>
+                    </div>
+
+                    <div class="publication-card" style="--accent-color: #00d4ff;">
+                        <div class="pub-status-badge" style="background: #00d4ff;">In Preparation</div>
+                        <div class="pub-year">2026</div>
+                        <h3 class="pub-title">Quinoline and Quinolone Derivatives as Antimicrobial Agents: A Comparative Review of Synthesis, Reactivity, and SAR Insights.</h3>
+                        <p class="pub-journal">Review Paper</p>
+                        <div class="pub-footer">
+                            <a href="#" class="pub-link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                    <polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/>
+                                </svg>
+                                Paper is Not Yet Available
+                            </a>
+                        </div>
+                        <div class="card-glow" style="background: #00d4ff;"></div>
+                    </div>
+
+                    <div class="publication-card" style="--accent-color: #b84fff;">
+                        <div class="pub-status-badge" style="background: #b84fff;">In Progress</div>
+                        <div class="pub-year">2026</div>
+                        <h3 class="pub-title">Design and Predict the Potential of Pyrazole-based Anti-Inflammatory agents using Fingerprint Machine Learning</h3>
+                        <p class="pub-journal">ML Project</p>
+                        <div class="pub-footer">
+                            <a href="#" class="pub-link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                    <polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/>
+                                </svg>
+                                Paper is Not Yet Available
+                            </a>
+                        </div>
+                        <div class="card-glow" style="background: #b84fff;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workshops Section -->
+        <section id="workshops" class="section workshops">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="title-number">03.</span> Workshops & Training
+                </h2>
+                <div class="workshops-grid">
+                    <div class="workshop-card">
+                        <div class="workshop-icon">🧬</div>
+                        <h3 class="workshop-name">9th ADD in Silico Drug Design Workshop</h3>
+                        <p class="workshop-focus">Molecular docking & QSAR</p>
+                        <div class="workshop-line"></div>
+                        
+                        <div class="pub-footer" style="--accent-color: #b84fff;">
+                            <a href="https://github.com/Mohaammed-Fouad/Ligand-Based-Virtual-Screening" class="pub-link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                    <polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/>
+                                </svg>
+                                View the Workshop Challenge Code
+                            </a>
+                        </div>
+                        <div class="card-glow" style="background: #b84fff;"></div>
+                    </div>
+
+                    <div class="workshop-card">
+                        <div class="workshop-icon">❄️</div>
+                        <h3 class="workshop-name">Winter Computational Chemistry School</h3>
+                        <p class="workshop-focus">Advanced computational methods</p>
+                        <div class="workshop-line"></div>
+                    </div>
+
+                    <div class="workshop-card">
+                        <div class="workshop-icon">📊</div>
+                        <h3 class="workshop-name">McKinsey Forward Program (Advanced)</h3>
+                        <p class="workshop-focus">Leadership & digital collaboration</p>
+                        <div class="workshop-line"></div>
+                    </div>
+
+                    <div class="workshop-card">
+                        <div class="workshop-icon">🐍</div>
+                        <h3 class="workshop-name">Python for Cheminformatics-Driven Molecular Docking</h3>
+                        <p class="workshop-focus">RCSB PDB & MolSSI</p>
+                        <div class="workshop-line"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section skills">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="title-number">04.</span> Technical Expertise
+                </h2>
+                <div class="skills-matrix">
+                    <div class="skill-category">
+                        <h3 class="category-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                            Cheminformatics
+                        </h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag" style="animation-delay: 0s;">RDKit</span>
+                            <span class="skill-tag" style="animation-delay: 0.1s;">Gnina</span>
+                            <span class="skill-tag" style="animation-delay: 0.2s;">AutoDock Vina</span>
+                            <span class="skill-tag" style="animation-delay: 0.3s;">MzDock</span>
+                            <span class="skill-tag" style="animation-delay: 0.4s;">Mols2grid</span>
+                            <span class="skill-tag" style="animation-delay: 0.5s;">Py3Dmol</span>
+                            <span class="skill-tag" style="animation-delay: 0.6s;">OpenBabel</span>
+                            <span class="skill-tag" style="animation-delay: 0.7s;">QSAR Modeling</span>
+                            <span class="skill-tag" style="animation-delay: 0.8s;">SHAP</span>
+                            <span class="skill-tag" style="animation-delay: 0.9s;">Molecular Dynamics</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3 class="category-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+                            </svg>
+                            Data Science
+                        </h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag" style="animation-delay: 0s;">Python</span>
+                            <span class="skill-tag" style="animation-delay: 0.1s;">Pandas</span>
+                            <span class="skill-tag" style="animation-delay: 0.2s;">Scikit-learn</span>
+                            <span class="skill-tag" style="animation-delay: 0.3s;">Seaborn</span>
+                            <span class="skill-tag" style="animation-delay: 0.4s;">matplotlib</span>
+                            <span class="skill-tag" style="animation-delay: 0.5s;">NumPy</span>
+                            <span class="skill-tag" style="animation-delay: 0.6s;">SQL</span>
+                            <span class="skill-tag" style="animation-delay: 0.7s;">Machine Learning</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3 class="category-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>
+                                <path d="M8.5 2h7"/><path d="M7 16h10"/>
+                            </svg>
+                            Wet Lab
+                        </h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag" style="animation-delay: 0s;">Organic Synthesis</span>
+                            <span class="skill-tag" style="animation-delay: 0.1s;">IR/NMR/UV-Vis</span>
+                            <span class="skill-tag" style="animation-delay: 0.2s;">HPLC</span>
+                            <span class="skill-tag" style="animation-delay: 0.3s;">SEM</span>
+                            <span class="skill-tag" style="animation-delay: 0.4s;">TEM</span>
+                            <span class="skill-tag" style="animation-delay: 0.5s;">XRD</span>
+                            <span class="skill-tag" style="animation-delay: 0.6s;">Antimicrobial Testing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="section education">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="title-number">05.</span> Education & Experience
+                </h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3>B.Sc. in Chemistry</h3>
+                            <p class="institution">Al-Azhar University</p>
+                            <p class="detail">Grade: Good</p>
+                            <p class="thesis">
+                                <strong>Thesis:</strong> Cellulose-Based Electrode for Supercapacitors: Harnessing Rice Straw for Sustainable Energy Storage
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3>Research Internship</h3>
+                            <p class="institution">Drug Research Center, British University in Egypt</p>
+                            <p class="detail">Molecular modeling & drug design</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3>Research Internship</h3>
+                            <p class="institution">Egyptian Atomic Energy Authority</p>
+                            <p class="detail">Advanced materials characterization</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3>Introduction to Data Science with Python</h3>
+                            <p class="institution">HarvardX / edX</p>
+                            <p class="detail">Python-based data science</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section contact">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="title-number">06.</span> Get In Touch
+                </h2>
+                <div class="contact-content">
+                    <p class="contact-text">
+                        I’m always open to discussing the intersection of molecular discovery and data science. Let’s connect to explore how we can advance the field through computational rigor.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/mohammed-fouad-chem" class="social-link linkedin">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>
+                            </svg>
+                            <span>LinkedIn</span>
+                        </a>
+                        <a href="https://github.com/Mohaammed-Fouad" class="social-link github">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                                <path d="M9 18c-4.51 2-5-2-7-2"/>
+                            </svg>
+                            <span>GitHub</span>
+                        </a>
+                        <a href="mohaammed.fouad@gmail.com" class="social-link email">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                            </svg>
+                            <span>Email</span>
+                        </a>
+                        <a href="https://orcid.org/0009-0005-2173-557X" class="social-link orcid">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                                <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2Z"/>
+                                <path d="M9 16V8"/><path d="M15 16V8"/>
+                            </svg>
+                            <span>ORCID</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Designed & Built by Mohammed Fouad • 2026</p>
+            <p class="footer-tech">Computational Chemistry • Cheminformatics • Data Analysis</p>
+        </footer>
     </div>
 
-    <!-- Mobile menu (hidden by default) -->
-    <div id="mobile-menu" class="md:hidden max-w-6xl mx-auto px-6 hidden mt-4">
-      <ul class="flex flex-col gap-3 text-sm font-semibold">
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#gallery">Gallery</a></li>
-      </ul>
-    </div>
-  </header>
+    <script>
+        // Generate molecular background
+        function generateMolecules() {
+            const bg = document.getElementById('molecularBg');
+            for (let i = 0; i < 30; i++) {
+                const molecule = document.createElement('div');
+                molecule.className = 'molecule';
+                molecule.style.left = Math.random() * 100 + '%';
+                molecule.style.top = Math.random() * 100 + '%';
+                molecule.style.animationDelay = Math.random() * 5 + 's';
+                molecule.style.animationDuration = (15 + Math.random() * 10) + 's';
+                bg.appendChild(molecule);
+            }
+        }
 
-  <main id="main" class="max-w-6xl mx-auto p-6 space-y-12">
-    <!-- About -->
-    <section id="about" class="card p-6 md:p-8 rounded-2xl fade-in">
-      <div class="flex flex-col md:flex-row items-center gap-6">
-        <div class="w-full md:w-56">
-          <figure>
-            <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG_20250908_140503.jpg?raw=true" alt="Mohammed Fouad profile" loading="lazy" class="w-full h-auto rounded-xl shadow-lg photo-frame">
-          </figure>
-        </div>
-        <div class="flex-1">
-          <h2 class="section-title text-2xl font-bold mb-4">About Me</h2>
-          <p class="text-slate-200 leading-relaxed">I am a post-graduate scientist with a strong foundation in QSAR, cheminformatics, and molecular modeling for drug discovery. My toolbox includes Python-based ML pipelines, RDKit workflows, and experience linking computational predictions with antimicrobial assays. I enjoy building tools that bridge computation and benchwork to speed safe, explainable discovery.</p>
-        </div>
-      </div>
-    </section>
+        // Generate data stream
+        function generateDataStream() {
+            const stream = document.getElementById('dataStream');
+            for (let i = 0; i < 8; i++) {
+                const line = document.createElement('div');
+                line.className = 'data-line';
+                line.style.animationDelay = (i * 0.2) + 's';
+                line.textContent = Math.random().toString(36).substring(2, 15);
+                stream.appendChild(line);
+            }
+        }
 
-    <!-- Skills -->
-    <section id="skills" class="card p-6 md:p-8 rounded-2xl fade-in">
-      <h2 class="section-title text-2xl font-bold mb-4">Skills</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="p-4 rounded-xl bg-slate-800">
-          <h3 class="font-semibold text-lg">Computational</h3>
-          <ul class="list-disc list-inside mt-2 text-slate-300 space-y-1">
-            <li>Machine Learning (Python, scikit-learn, PyTorch)</li>
-            <li>Cheminformatics (RDKit, SMILES pipelines)</li>
-            <li>Molecular Modeling (QSAR, docking, MD basics)</li>
-          </ul>
-        </div>
-        <div class="p-4 rounded-xl bg-slate-800">
-          <h3 class="font-semibold text-lg">Research</h3>
-          <ul class="list-disc list-inside mt-2 text-slate-300 space-y-1">
-            <li>Organic synthesis & characterization</li>
-            <li>Spectrophotometry & chromatography</li>
-            <li>Antimicrobial assays (MIC/MBC)</li>
-          </ul>
-        </div>
-        <div class="p-4 rounded-xl bg-slate-800">
-          <h3 class="font-semibold text-lg">Foundations</h3>
-          <ul class="list-disc list-inside mt-2 text-slate-300 space-y-1">
-            <li>Quantum, organic & physical chemistry</li>
-            <li>Linear algebra, statistics & data analysis</li>
-            <li>Python, SQL, R (basic)</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+        // Scroll handling
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
 
-    <!-- Projects (carousel: shows exactly 2 items on md+ screens) -->
-    <section id="projects" class="card p-6 md:p-8 rounded-2xl fade-in">
-      <h2 class="section-title text-2xl font-bold mb-4">Projects</h2>
-
-      <div class="carousel-container">
-        <button id="projects-prev" class="carousel-btn left" aria-label="Previous projects">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-
-        <div id="projects-track" class="carousel-track px-2">
-          <!-- Project 1 -->
-          <article class="flex-shrink-0 w-full md:w-1/2 rounded-xl bg-slate-800 p-4">
-            <h3 class="text-xl font-bold text-sky-300 mb-2">QSAR for Drug Discovery</h3>
-            <figure>
-              <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/newplot%20(3).png?raw=true" alt="QSAR project screenshot" loading="lazy" class="w-full h-100 object-cover rounded-lg photo-frame">
-              <figcaption class="caption">QSAR Modeling of Pyrazoles Anti-Inflammatory Activity.</figcaption>
-            </figure>
-            <p class="text-slate-300 mt-3">Data exploration, Model training, and Validation using RMSE, R^2, MSE and CV. (R^2= 0.86)</p>
-          </article>
-
-          <!-- Project 2 -->
-          <article class="flex-shrink-0 w-full md:w-1/2 rounded-xl bg-slate-800 p-4">
-            <h3 class="text-xl font-bold text-sky-300 mb-2">Antimicrobial Evaluation</h3>
-            <figure>
-              <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG_20250908_203144.png?raw=true" alt="Lab antimicrobial testing" loading="lazy" class="w-full h-100 object-cover rounded-lg photo-frame">
-              <figcaption class="caption">Generations of Quinoline Antimicrobial Agents.</figcaption>
-            </figure>
-            <p class="text-slate-300 mt-3">Conducted comprehensive review about the SAR activity of quinoline antimicrobial agents.</p>
-          </article>
-
-          <!-- Project 3 -->
-          <article class="flex-shrink-0 w-full md:w-1/2 rounded-xl bg-slate-800 p-4">
-            <h3 class="text-xl font-bold text-sky-300 mb-2">Anticancer Activity</h3>
-            <figure>
-              <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG_20250908_203331.jpg?raw=true" alt="Docking screenshot" loading="lazy" class="w-full h-100 object-cover rounded-lg photo-frame">
-              <figcaption class="caption">Extraction of Chitin from Shrimp Peel.</figcaption>
-            </figure>
-            <p class="text-slate-300 mt-3">Synthesis of novel chitosan-quinoline hybrids as novel anticancer agents.</p>
-          </article>
-
-          <!-- Project 4 -->
-          <article class="flex-shrink-0 w-full md:w-1/2 rounded-xl bg-slate-800 p-4">
-            <h3 class="text-xl font-bold text-sky-300 mb-2">Chemosensing Applications</h3>
-            <figure>
-              <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG_20250908_194218.jpg?raw=true" alt="Pipelines" loading="lazy" class="w-full h-100 object-cover rounded-lg photo-frame">
-              <figcaption class="caption">Synthesis of Rhodamine Derivatives.</figcaption>
-            </figure>
-            <p class="text-slate-300 mt-3">Synthesis, and evaluation of rhodamine derivatives in chemosensing applications.</p>
-          </article>
-        </div>
-
-        <button id="projects-next" class="carousel-btn right" aria-label="Next projects">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-    </section>
-
-    <!-- Gallery (carousel: shows 3 on md+ screens) -->
-    <section id="gallery" class="card p-6 md:p-8 rounded-2xl fade-in">
-      <h2 class="section-title text-2xl font-bold mb-4">Gallery</h2>
-
-      <div class="carousel-container">
-        <button id="gallery-prev" class="carousel-btn left" aria-label="Previous gallery">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-
-        <div id="gallery-track" class="carousel-track px-2">
-          <figure class="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 rounded-lg overflow-hidden bg-slate-700">
-            <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG-20250908-WA0008.jpg?raw=true" alt="Conference talk" loading="lazy" class="w-full h-70 object-cover">
-            <figcaption class="caption px-3 py-2">Explaining Organic Chemistry for my Class.</figcaption>
-          </figure>
-
-          <figure class="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 rounded-lg overflow-hidden bg-slate-700">
-            <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG_20250908_151803.jpg?raw=true" alt="Lab setup" loading="lazy" class="w-full h-70 object-cover">
-            <figcaption class="caption px-3 py-2">Lab Work: Synthesis of Zinc Organic Framework (ZIF-8).</figcaption>
-          </figure>
-
-          <figure class="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 rounded-lg overflow-hidden bg-slate-700">
-            <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG_20250908_152240.jpg?raw=true" alt="LEGO education" loading="lazy" class="w-full h-70 object-cover">
-            <figcaption class="caption px-3 py-2">STEM Education: Mentoring Students through First Lego League Challenge Competition.</figcaption>
-          </figure>
-
-          <!-- Extra gallery items (so arrows make sense) -->
-          <figure class="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 rounded-lg overflow-hidden bg-slate-700">
-            <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG_20250908_210155.jpg?raw=true" alt="Poster" loading="lazy" class="w-full h-70 object-cover">
-            <figcaption class="caption px-3 py-2">Recrystalization of Acetanilide.</figcaption>
-          </figure>
-
-          <figure class="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 rounded-lg overflow-hidden bg-slate-700">
-            <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG_20250908_210106.jpg?raw=true" alt="Team" loading="lazy" class="w-full h-70 object-cover">
-            <figcaption class="caption px-3 py-2">Electrochemical Measurements in CMRDI.</figcaption>
-          </figure>
-
-          <figure class="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 rounded-lg overflow-hidden bg-slate-700">
-            <img src="https://github.com/Mohaammed-Fouad/my-portfolio/blob/main/Photos/IMG_20250908_205944.jpg?raw=true" alt="Team" loading="lazy" class="w-full h-70 object-cover">
-            <figcaption class="caption px-3 py-2">Pharmaconex Technical Conference.</figcaption>
-          </figure>
-        </div>
-
-        <button id="gallery-next" class="carousel-btn right" aria-label="Next gallery">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
-        </button>
-      </div>
-    </section>
-
-    <!-- Interactive Molecule -->
-    <section class="card p-6 md:p-8 rounded-2xl text-center fade-in">
-      <h2 class="section-title text-2xl font-bold mb-4">Interactive Molecule</h2>
-      <div class="mx-auto max-w-2xl mb-4">
-        <svg id="molecule-svg" width="100%" height="260" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Interactive molecule drawing"></svg>
-      </div>
-      <div class="flex items-center justify-center gap-4">
-        <button id="mol-button" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-6 rounded-full shadow focus-outline">Show Molecule</button>
-        <button id="mol-random" class="bg-slate-700 hover:bg-slate-600 text-white font-medium py-2 px-4 rounded-full shadow focus-outline">Random</button>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="text-center text-slate-400 py-6 mt-8">
-    <div class="max-w-6xl mx-auto">
-      <p>&copy; 2025 Mohammed Fouad. All rights reserved.</p>
-      <p class="italic mt-1">"Designing molecules with data, accelerating discovery."</p>
-      <div class="mt-2 text-sm">
-        <a href="mailto:mohaammed.fouad@gmail.com" class="hover:text-slate-200">mohaammed.fouad@gmail.com</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // Mobile menu toggle
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if(menuToggle){
-      menuToggle.addEventListener('click', () => {
-        const shown = mobileMenu.classList.toggle('hidden');
-        menuToggle.setAttribute('aria-expanded', String(!shown));
-      });
-    }
-
-    // --- Molecule drawing (kept unchanged) ---
-    const svg = document.getElementById('molecule-svg');
-    const button = document.getElementById('mol-button');
-    const randBtn = document.getElementById('mol-random');
-    let moleculeIndex = 0;
-
-    const molecules = [
-      // Propane (original)
-      {
-        atoms:[{x:80,y:130,r:12,label:'C'},{x:200,y:130,r:12,label:'C'},{x:320,y:130,r:12,label:'C'}],
-        bonds:[{x1:80,y1:130,x2:200,y2:130},{x1:200,y1:130,x2:320,y2:130}]
-      },
-
-      // Benzene (original)
-      {
-        atoms:[
-          {x:200,y:60,r:10,label:'C'},{x:260,y:95,r:10,label:'C'},{x:260,y:160,r:10,label:'C'},
-          {x:200,y:195,r:10,label:'C'},{x:140,y:160,r:10,label:'C'},{x:140,y:95,r:10,label:'C'}
-        ],
-        bonds:[
-          {x1:200,y1:60,x2:260,y2:95},{x1:260,y1:95,x2:260,y2:160},{x1:260,y1:160,x2:200,y2:195},
-          {x1:200,y1:195,x2:140,y2:160},{x1:140,y1:160,x2:140,y2:95},{x1:140,y1:95,x2:200,y2:60}
-        ]
-      },
-
-      // Glycine-like (original, kept)
-      {
-        atoms:[{x:200,y:120,r:12,label:'C'},{x:140,y:90,r:10,label:'NH3'},{x:260,y:90,r:10,label:'OH'},{x:260,y:150,r:10,label:'C'}],
-        bonds:[{x1:200,y1:120,x2:140,y2:90},{x1:200,y1:120,x2:260,y2:90},{x1:200,y1:120,x2:260,y2:150}]
-      },
-
-      // Pyridine (single hexagon with one N)
-      {
-        atoms:[
-          {x:200,y:40,r:10,label:'N'},
-          {x:250,y:75,r:10,label:'C'},
-          {x:250,y:135,r:10,label:'C'},
-          {x:200,y:170,r:10,label:'C'},
-          {x:150,y:135,r:10,label:'C'},
-          {x:150,y:75,r:10,label:'C'}
-        ],
-        bonds:[
-          {x1:200,y1:40,x2:250,y2:75},{x1:250,y1:75,x2:250,y2:135},{x1:250,y1:135,x2:200,y2:170},
-          {x1:200,y1:170,x2:150,y2:135},{x1:150,y1:135,x2:150,y2:75},{x1:150,y1:75,x2:200,y2:40}
-        ]
-      },
-
-      // Quinoline (two fused hexagons; one atom set as N in the pyridine ring)
-      {
-        atoms:[
-          // left hexagon (pyridine) - note top atom is 'N'
-          {x:170,y:60,r:10,label:'N'},   // L1 (pyridine N)
-          {x:210,y:85,r:10,label:'C'},   // L2 (shared)
-          {x:210,y:135,r:10,label:'C'},  // L3 (shared)
-          {x:170,y:160,r:10,label:'C'},  // L4
-          {x:130,y:135,r:10,label:'C'},  // L5
-          {x:130,y:85,r:10,label:'C'},   // L6
-
-          // right hexagon (benzene) - shares L2 (210,85) and L3 (210,135)
-          {x:250,y:60,r:10,label:'C'},   // R1 (top)
-          {x:290,y:85,r:10,label:'C'},   // R2
-          {x:290,y:135,r:10,label:'C'},  // R3
-          {x:250,y:160,r:10,label:'C'}   // R4 (bottom)
-        ],
-        bonds:[
-          // left ring
-          {x1:170,y1:60,x2:210,y2:85},{x1:210,y1:85,x2:210,y2:135},{x1:210,y1:135,x2:170,y2:160},
-          {x1:170,y1:160,x2:130,y2:135},{x1:130,y1:135,x2:130,y2:85},{x1:130,y1:85,x2:170,y2:60},
-          // right ring (uses the shared L2/L3 positions at 210,85 and 210,135)
-          {x1:210,y1:85,x2:250,y2:60},{x1:250,y1:60,x2:290,y2:85},{x1:290,y1:85,x2:290,y2:135},
-          {x1:290,y1:135,x2:250,y2:160},{x1:250,y1:160,x2:210,y2:135}
-        ]
-      },
-
-      // Pyrazole (five-membered ring; two adjacent nitrogens)
-      {
-        atoms:[
-          {x:60,y:60,r:10,label:'N'},   // P1 (top)
-          {x:95,y:85,r:10,label:'N'},   // P2 (upper-right) - adjacent
-          {x:80,y:120,r:10,label:'C'},  // P3 (lower-right)
-          {x:40,y:120,r:10,label:'C'},  // P4 (lower-left)
-          {x:25,y:85,r:10,label:'C'}    // P5 (upper-left)
-        ],
-        bonds:[
-          {x1:60,y1:60,x2:95,y2:85},{x1:95,y1:85,x2:80,y2:120},{x1:80,y1:120,x2:40,y2:120},
-          {x1:40,y1:120,x2:25,y2:85},{x1:25,y1:85,x2:60,y2:60}
-        ]
-      },
-
-      // Imidazole (five-membered with two non-adjacent nitrogens)
-      {
-        atoms:[
-          {x:320,y:60,r:10,label:'N'},  // I1 (top)
-          {x:350,y:95,r:10,label:'C'},  // I2
-          {x:330,y:135,r:10,label:'N'}, // I3 (non-adjacent N)
-          {x:290,y:135,r:10,label:'C'}, // I4
-          {x:275,y:95,r:10,label:'C'}   // I5
-        ],
-        bonds:[
-          {x1:320,y1:60,x2:350,y2:95},{x1:350,y1:95,x2:330,y2:135},{x1:330,y1:135,x2:290,y2:135},
-          {x1:290,y1:135,x2:275,y2:95},{x1:275,y1:95,x2:320,y2:60}
-        ]
-      },
-
-      // Naphthalene (two fused benzene rings; nice aromatic motif)
-      {
-        atoms:[
-          {x:60,y:180,r:8,label:'C'},{x:95,y:155,r:8,label:'C'},{x:135,y:155,r:8,label:'C'},{x:165,y:180,r:8,label:'C'},
-          {x:135,y:205,r:8,label:'C'},{x:95,y:205,r:8,label:'C'},{x:195,y:155,r:8,label:'C'},{x:235,y:155,r:8,label:'C'},
-          {x:275,y:180,r:8,label:'C'},{x:235,y:205,r:8,label:'C'},{x:195,y:205,r:8,label:'C'}
-        ],
-        bonds:[
-          {x1:60,y1:180,x2:95,y2:155},{x1:95,y1:155,x2:135,y2:155},{x1:135,y1:155,x2:165,y2:180},
-          {x1:165,y1:180,x2:135,y2:205},{x1:135,y1:205,x2:95,y2:205},{x1:95,y1:205,x2:60,y2:180},
-          // second ring connections (fused)
-          {x1:165,y1:180,x2:195,y2:155},{x1:195,y1:155,x2:235,y2:155},{x1:235,y1:155,x2:275,y2:180},
-          {x1:275,y1:180,x2:235,y2:205},{x1:235,y1:205,x2:195,y2:205},{x1:195,y1:205,x2:165,y2:180}
-        ]
-      }
-    ];
-
-
-    function clearSVG(){while(svg.firstChild) svg.removeChild(svg.firstChild)}
-
-    function drawMolecule(mol){
-      clearSVG();
-      mol.bonds.forEach((b,i)=>{
-        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-        line.setAttribute('x1',b.x1);line.setAttribute('y1',b.y1);line.setAttribute('x2',b.x2);line.setAttribute('y2',b.y2);
-        line.classList.add('mol-line');
-        svg.appendChild(line);
-        // draw dash animation
-        const len = Math.hypot(b.x2-b.x1,b.y2-b.y1);
-        line.style.strokeDasharray = len;
-        line.style.strokeDashoffset = len;
-        setTimeout(()=> line.style.strokeDashoffset = 0, 80 + i*80);
-      });
-
-      mol.atoms.forEach((a,i)=>{
-        const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-        const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        c.setAttribute('cx',a.x);c.setAttribute('cy',a.y);c.setAttribute('r',a.r);
-        c.classList.add('mol-atom');c.style.opacity = 0;
-        const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-        t.setAttribute('x',a.x);t.setAttribute('y',a.y);t.setAttribute('dy','.35em');t.setAttribute('text-anchor','middle');
-        t.style.fontSize = '12px';t.style.fill = '#0b1220';t.style.opacity = 0;t.textContent = a.label;
-        g.appendChild(c);g.appendChild(t);svg.appendChild(g);
-        setTimeout(()=>{c.style.opacity = 1; t.style.opacity = 1}, 200 + i*90);
-      });
-    }
-
-    button.addEventListener('click', ()=>{
-      drawMolecule(molecules[moleculeIndex]);
-      button.textContent = 'Next Molecule';
-      moleculeIndex = (moleculeIndex + 1) % molecules.length;
-    });
-    randBtn.addEventListener('click', ()=>{
-      moleculeIndex = Math.floor(Math.random()*molecules.length);
-      drawMolecule(molecules[moleculeIndex]);
-      button.textContent = 'Next Molecule';
-      moleculeIndex = (moleculeIndex+1)%molecules.length;
-    });
-
-    // IntersectionObserver for reveal animations
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}
-      })
-    },{threshold:0.18});
-    document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
-
-    /* -------------------------
-       Carousel utility functions
-       ------------------------- */
-
-    // visible counts:
-    function projectsVisibleCount(){
-      return window.innerWidth >= 768 ? 2 : 1;
-    }
-    function galleryVisibleCount(){
-      const w = window.innerWidth;
-      if (w >= 768) return 3; // md and up
-      if (w >= 640) return 2; // sm
-      return 1;
-    }
-
-    // small helper to parse gap px value
-    function px(val){ return parseFloat(val) || 0; }
-
-    // core adaptive carousel: moves by 1 item per click, reads computed child width,
-    // robust to resize and images loading.
-    function setupAdaptiveCarousel(trackId, prevId, nextId, visibleCountFn){
-      const track = document.getElementById(trackId);
-      const prev = document.getElementById(prevId);
-      const next = document.getElementById(nextId);
-      let index = 0;
-
-      function update(){
-        const visible = visibleCountFn();
-        if (!track.children.length) return;
-        // read computed gap and item width
-        const gap = px(getComputedStyle(track).gap);
-        // ensure first child is measured
-        const first = track.children[0];
-        const itemRect = first.getBoundingClientRect();
-        const itemWidth = Math.round(itemRect.width);
-        const maxIndex = Math.max(0, track.children.length - visible);
-        if(index > maxIndex) index = maxIndex;
-        if(index < 0) index = 0;
-        const x = index * (itemWidth + gap);
-        // apply transform
-        track.style.transform = `translateX(-${x}px)`;
-        // buttons accessibility
-        prev.disabled = index === 0;
-        next.disabled = index === maxIndex;
-        prev.setAttribute('aria-disabled', String(index===0));
-        next.setAttribute('aria-disabled', String(index===maxIndex));
-      }
-
-      prev.addEventListener('click', ()=>{ index = Math.max(0, index-1); update(); });
-      next.addEventListener('click', ()=>{ index = Math.min(track.children.length - visibleCountFn(), index+1); update(); });
-
-      // keyboard activation for buttons (Enter / Space)
-      [prev, next].forEach(btn=>{
-        btn.addEventListener('keydown', (e)=>{
-          if(e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            btn.click();
-          }
+            // Update active nav link
+            const sections = ['hero', 'about', 'publications', 'workshops', 'skills', 'education', 'contact'];
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            sections.forEach((sectionId, index) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 100 && rect.bottom >= 100) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        if (navLinks[index - 1]) { // -1 because hero doesn't have a nav link
+                            navLinks[index - 1].classList.add('active');
+                        }
+                    }
+                }
+            });
         });
-      });
 
-      // recalc on resize / load / images complete
-      let tmr;
-      function scheduleUpdate(){ clearTimeout(tmr); tmr = setTimeout(update, 80); }
-      window.addEventListener('resize', scheduleUpdate);
-      window.addEventListener('load', scheduleUpdate);
-
-      // wait for images inside the track to load, then update
-      const imgs = track.querySelectorAll('img');
-      if (imgs.length === 0) scheduleUpdate();
-      else {
-        let remaining = imgs.length;
-        imgs.forEach(img=>{
-          if(img.complete) { remaining--; if(remaining===0) scheduleUpdate(); }
-          else img.addEventListener('load', ()=>{ remaining--; if(remaining===0) scheduleUpdate(); });
-          // also handle error case
-          img.addEventListener('error', ()=>{ remaining--; if(remaining===0) scheduleUpdate(); });
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
-      }
 
-      // initial call
-      scheduleUpdate();
-
-      return { update };
-    }
-
-    const projectsCarousel = setupAdaptiveCarousel('projects-track','projects-prev','projects-next', projectsVisibleCount);
-    const galleryCarousel  = setupAdaptiveCarousel('gallery-track','gallery-prev','gallery-next', galleryVisibleCount);
-
-    // ensure buttons focusable
-    ['projects-prev','projects-next','gallery-prev','gallery-next'].forEach(id=>{
-      const el = document.getElementById(id);
-      if(el) el.tabIndex = 0;
-    });
-
-  </script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            generateMolecules();
+            generateDataStream();
+        });
+    </script>
 </body>
 </html>
